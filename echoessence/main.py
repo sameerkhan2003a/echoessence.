@@ -1,12 +1,9 @@
-from flask import Flask, render_template, request, session, flash, redirect, url_for
+from flask import Flask, render_template, request
 import os
 import openai
-from werkzeug.security import generate_password_hash, check_password_hash
-import secrets
-import json
-import os
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -15,7 +12,7 @@ def index():
         language = request.form['language']
         customLanguage = request.form['customLanguage']
         audio_file = request.files['audiofile']
-        audio_file_path = os.path.join('echoessence','templates', audio_file.filename)
+        audio_file_path = os.path.join(app.config['UPLOAD_FOLDER'], audio_file.filename)
         audio_file.save(audio_file_path)
         client = openai.OpenAI(api_key=os.environ.get('secret_key'))
         with open(audio_file_path, 'rb') as audio_file:
@@ -33,6 +30,6 @@ def index():
             ]
         )
         result = response.choices[0].message.content
-        
 
     return render_template('index.html', result=result)
+
