@@ -15,7 +15,7 @@ def index():
         language = request.form['language']
         customLanguage = request.form['customLanguage']
         audio_file = request.files['audiofile']
-        audio_file_path = os.path.join('Documents', 'Sound Recordings', audio_file.filename)
+        audio_file_path = os.path.join('echoessence','static', audio_file.filename)
         audio_file.save(audio_file_path)
         client = openai.OpenAI(api_key=os.environ.get('secret_key'))
         with open(audio_file_path, 'rb') as audio_file:
